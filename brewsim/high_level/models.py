@@ -34,7 +34,7 @@ class Prix(models.Model):
     prix = models.IntegerField()
 
     def __str__(self):
-        return f"{self.departement}, {self.ingedient}"
+        return f"{self.departement}, {self.ingredient}"
 
 
 class Machine(models.Model):
