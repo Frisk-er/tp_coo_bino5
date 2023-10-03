@@ -44,6 +44,9 @@ class Machine(models.Model):
     def __str__(self):
         return self.nom
 
+    def costs(self):
+        return self.prix
+
 
 class QuantiteIngredient(models.Model):
     ingredient = models.ForeignKey(
@@ -56,6 +59,12 @@ class QuantiteIngredient(models.Model):
 
     def __str__(self):
         return f"{self.ingredient}, {self.quantite}"
+
+    def costs(self, numDepartement):
+        return (
+            self.quantite
+            * self.ingredient.prix_set.get(departement__numero=numDepartement).prix
+        )
 
 
 class Action(models.Model):
@@ -112,3 +121,14 @@ class Usine(models.Model):
 
     def __str__(self):
         return f"Usine du {self.departement}"
+
+    def costs(self):
+        coutTerrain = self.taille * self.departement.prixM2
+        coutMachines = 0
+        for m in self.machines.all():
+            coutMachines = coutMachines + m.costs()
+        coutStocks = 0
+        for m in self.stocks.all():
+            coutStocks = coutStocks + m.cousts(self.departement.numero)
+
+        return coutTerrain + coutMachines + coutStocks
