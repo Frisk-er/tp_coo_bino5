@@ -129,6 +129,6 @@ class Usine(models.Model):
             coutMachines = coutMachines + m.costs()
         coutStocks = 0
         for m in self.stocks.all():
-            coutStocks = coutStocks + m.cousts(self.departement.numero)
+            coutStocks = coutStocks + m.costs(self.departement.numero)
 
         return coutTerrain + coutMachines + coutStocks
