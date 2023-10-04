@@ -23,7 +23,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(
         "departement/<int:pk>",
-        views.as_view(),
+        views.DepartementDetailView.as_view(),
         name="departement",
     ),
 ]
