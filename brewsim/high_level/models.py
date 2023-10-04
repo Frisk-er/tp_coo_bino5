@@ -17,6 +17,9 @@ class Departement(models.Model):
     def __str__(self):
         return f"{self.numero}"
 
+    def json(self):
+        return {"numero": self.numero, "prix_m2": self.prixM2}
+
 
 class Prix(models.Model):
     ingredient = models.ForeignKey(
