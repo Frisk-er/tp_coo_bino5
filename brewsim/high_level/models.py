@@ -1,5 +1,7 @@
 # Create your models here.
 
+
+import numpy
 from django.db import models
 
 
@@ -8,6 +10,9 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.nom
+
+    def json(self):
+        return {"nom": self.nom}
 
 
 class Departement(models.Model):
@@ -39,6 +44,13 @@ class Prix(models.Model):
     def __str__(self):
         return f"{self.departement}, {self.ingredient}"
 
+    def json(self):
+        return {
+            "ingredient": self.ingredient.id,
+            "departement": self.departement.id,
+            "prix": self.prix,
+        }
+
 
 class Machine(models.Model):
     nom = models.CharField(max_length=100)
@@ -49,6 +61,9 @@ class Machine(models.Model):
 
     def costs(self):
         return self.prix
+
+    def json(self):
+        return {"nom": self.nom, "prix": self.prix}
 
 
 class QuantiteIngredient(models.Model):
@@ -68,6 +83,9 @@ class QuantiteIngredient(models.Model):
             self.quantite
             * self.ingredient.prix_set.get(departement__numero=numDepartement).prix
         )
+
+    def json(self):
+        return {"ingredient": self.ingredient.id, "quantite": self.quantite}
 
 
 class Action(models.Model):
@@ -96,6 +114,13 @@ class Action(models.Model):
     def __str__(self):
         return self.commandes
 
+    def json(self):
+        return {
+            "machine": self.machine.id,
+            "commandes": self.commandes,
+            "action": self.action.id,
+        }
+
 
 class Recette(models.Model):
     nom = models.CharField(max_length=100)
@@ -108,6 +133,9 @@ class Recette(models.Model):
 
     def __str__(self):
         return self.nom
+
+    def json(self):
+        return {"nom": self.nom, "action": self.action.id}
 
 
 class Usine(models.Model):
@@ -135,3 +163,22 @@ class Usine(models.Model):
             coutStocks = coutStocks + m.costs(self.departement.numero)
 
         return coutTerrain + coutMachines + coutStocks
+
+    def json(self):
+        mach = []
+        for m in self.machines.all():
+            mach = numpy.append(mach, m.id)
+        rec = []
+        for m in self.recettes.all():
+            rec = numpy.append(rec, m.id)
+        sto = []
+        for m in self.stocks.all():
+            sto = numpy.append(sto, m.id)
+
+        return {
+            "departement": self.departement.id,
+            "taille": self.taille,
+            "machines": mach,
+            "recettes": rec,
+            "stocks": sto,
+        }

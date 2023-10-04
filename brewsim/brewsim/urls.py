@@ -16,14 +16,48 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-from . import views
+from high_level import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(
+        "Ingredient/<int:pk>",
+        views.IngredientDetailView.as_view(),
+        name="Ingredient",
+    ),
+    path(
         "departement/<int:pk>",
         views.DepartementDetailView.as_view(),
         name="departement",
+    ),
+    path(
+        "Prix/<int:pk>",
+        views.PrixDetailView.as_view(),
+        name="Prix",
+    ),
+    path(
+        "Machine/<int:pk>",
+        views.MachineDetailView.as_view(),
+        name="Machine",
+    ),
+    path(
+        "QuantiteIngredient/<int:pk>",
+        views.QuantiteIngredientDetailView.as_view(),
+        name="QuantiteIngredient",
+    ),
+    path(
+        "Action/<int:pk>",
+        views.ActionDetailView.as_view(),
+        name="Action",
+    ),
+    path(
+        "Recette/<int:pk>",
+        views.RecetteDetailView.as_view(),
+        name="Recette",
+    ),
+    path(
+        "Usine/<int:pk>",
+        views.UsineDetailView.as_view(),
+        name="Usine",
     ),
 ]
