@@ -60,4 +60,9 @@ urlpatterns = [
         views.UsineDetailView.as_view(),
         name="Usine",
     ),
+    path(
+        "api/<int:pk>",
+        views.apiDetailView.as_view(),
+        name="api",
+    ),
 ]

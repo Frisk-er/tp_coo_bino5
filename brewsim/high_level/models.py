@@ -1,7 +1,6 @@
 # Create your models here.
 
 
-import numpy
 from django.db import models
 
 
@@ -51,6 +50,13 @@ class Prix(models.Model):
             "prix": self.prix,
         }
 
+    def json_extended(self):
+        return {
+            "ingredient": self.ingredient.json,
+            "departement": self.departement.json,
+            "prix": self.prix,
+        }
+
 
 class Machine(models.Model):
     nom = models.CharField(max_length=100)
@@ -87,6 +93,12 @@ class QuantiteIngredient(models.Model):
     def json(self):
         return {"ingredient": self.ingredient.id, "quantite": self.quantite}
 
+    def json_extended(self):
+        return {
+            "ingredient": self.ingredient.json,
+            "quantite": self.quantite,
+        }
+
 
 class Action(models.Model):
     machine = models.ForeignKey(
@@ -121,6 +133,13 @@ class Action(models.Model):
             "action": self.action.id,
         }
 
+    def json_extended(self):
+        return {
+            "machine": self.machine.json,
+            "commandes": self.commandes,
+            "action": self.action.json,
+        }
+
 
 class Recette(models.Model):
     nom = models.CharField(max_length=100)
@@ -136,6 +155,9 @@ class Recette(models.Model):
 
     def json(self):
         return {"nom": self.nom, "action": self.action.id}
+
+    def json_extended(self):
+        return {"nom": self.nom, "action": self.action.json}
 
 
 class Usine(models.Model):
@@ -167,16 +189,35 @@ class Usine(models.Model):
     def json(self):
         mach = []
         for m in self.machines.all():
-            mach = numpy.append(mach, m.id)
+            mach.append(m.id)
         rec = []
         for m in self.recettes.all():
-            rec = numpy.append(rec, m.id)
+            rec.append(m.id)
         sto = []
         for m in self.stocks.all():
-            sto = numpy.append(sto, m.id)
+            sto.append(m.id)
 
         return {
             "departement": self.departement.id,
+            "taille": self.taille,
+            "machines": mach,
+            "recettes": rec,
+            "stocks": sto,
+        }
+
+    def json_extended(self):
+        mach = []
+        for m in self.machines.all():
+            mach.append(m.json)
+        rec = []
+        for m in self.recettes.all():
+            rec.append(m.json)
+        sto = []
+        for m in self.stocks.all():
+            sto.append(m.json)
+
+        return {
+            "departement": self.departement.json,
             "taille": self.taille,
             "machines": mach,
             "recettes": rec,
