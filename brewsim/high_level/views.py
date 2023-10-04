@@ -67,12 +67,11 @@ class apiDetailView(DetailView):
     model = models.Departement
 
     def render_to_response(self, context, **respose_kwargs):
-        usine = self.object.usine_set.get()
-
         jsonPrix = []
         for m in self.object.prix_set.all():
             jsonPrix.append(m.json_extended())
+        d = self.object.json()
+        d["usine"] = self.object.usine_set.get().json_extended()
+        d["prix"] = jsonPrix
 
-        return HttpResponse(
-            dumps({self.object.json_extended(), usine.json_extended(), jsonPrix})
-        )
+        return HttpResponse(dumps(d))
