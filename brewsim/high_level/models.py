@@ -95,7 +95,7 @@ class QuantiteIngredient(models.Model):
 
     def json_extended(self):
         return {
-            "ingredient": self.ingredient.json,
+            "ingredient": self.ingredient.json(),
             "quantite": self.quantite,
         }
 
@@ -157,7 +157,7 @@ class Recette(models.Model):
         return {"nom": self.nom, "action": self.action.id}
 
     def json_extended(self):
-        return {"nom": self.nom, "action": self.action.json}
+        return {"nom": self.nom, "action": self.action.json()}
 
 
 class Usine(models.Model):
@@ -208,16 +208,16 @@ class Usine(models.Model):
     def json_extended(self):
         mach = []
         for m in self.machines.all():
-            mach.append(m.json)
+            mach.append(m.json())
         rec = []
         for m in self.recettes.all():
-            rec.append(m.json)
+            rec.append(m.json())
         sto = []
         for m in self.stocks.all():
-            sto.append(m.json)
+            sto.append(m.json())
 
         return {
-            "departement": self.departement.json,
+            "departement": self.departement.json(),
             "taille": self.taille,
             "machines": mach,
             "recettes": rec,
