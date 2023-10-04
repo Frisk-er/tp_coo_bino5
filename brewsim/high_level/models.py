@@ -52,8 +52,8 @@ class Prix(models.Model):
 
     def json_extended(self):
         return {
-            "ingredient": self.ingredient.json,
-            "departement": self.departement.json,
+            "ingredient": self.ingredient.json(),
+            "departement": self.departement.json(),
             "prix": self.prix,
         }
 
@@ -134,11 +134,17 @@ class Action(models.Model):
         }
 
     def json_extended(self):
-        return {
-            "machine": self.machine.json,
-            "commandes": self.commandes,
-            "action": self.action.json,
-        }
+        if self.action:
+            return {
+                "machine": self.machine.json(),
+                "commandes": self.commandes,
+                "action": self.action.json_extended(),
+            }
+        else:
+            return {
+                "machine": self.machine.json(),
+                "commandes": self.commandes,
+            }
 
 
 class Recette(models.Model):
@@ -157,7 +163,7 @@ class Recette(models.Model):
         return {"nom": self.nom, "action": self.action.id}
 
     def json_extended(self):
-        return {"nom": self.nom, "action": self.action.json()}
+        return {"nom": self.nom, "action": self.action.json_extended()}
 
 
 class Usine(models.Model):
