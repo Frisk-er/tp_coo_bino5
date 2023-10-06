@@ -18,7 +18,7 @@ class Ingredient{
     	nom_=j["nom"];
     }
     Ingredient(int id){
-    	std::string u="http://localhost:8000/departement/"+std::to_string(id);
+    	std::string u="http://localhost:8000/Ingredient/"+std::to_string(id);
     	cpr::Response r = cpr::Get(cpr::Url{u});
     	std::cout << r.status_code << std::endl; // 200
     	json j=json::parse(r.text);
@@ -77,7 +77,7 @@ class Prix{
     	prix_=j["prix"];
     }*/
     Prix(int id){
-    	std::string u="http://localhost:8000/departement/"+std::to_string(id);
+    	std::string u="http://localhost:8000/Prix/"+std::to_string(id);
     	cpr::Response r = cpr::Get(cpr::Url{u});
     	std::cout << r.status_code << std::endl; // 200
     	json j=json::parse(r.text);
@@ -91,6 +91,41 @@ class Prix{
         }
 };
 
+class Machine{
+
+	std::string nom_;
+	int prix_;
+	public:
+	Machine(int id){
+		std::string u="http://localhost:8000/Machine/"+std::to_string(id);
+    	cpr::Response r = cpr::Get(cpr::Url{u});
+    	std::cout << r.status_code << std::endl; // 200
+    	json j=json::parse(r.text);
+    	nom_=j["nom"];
+    	prix_=j["prix"];
+	}
+	friend std::ostream& operator<<(std::ostream& out, const Machine& p) {
+        return out <<"nom:"<< p.nom_ << ", prix:" << p.prix_;
+        }
+
+};
+
+class QuantiteIngredient{
+	std::unique_ptr<Ingredient> ingredient_;
+	int quantite_;
+	public:
+	QuantiteIngredient(int id){
+		std::string u="http://localhost:8000/QuantiteIngredient/"+std::to_string(id);
+    	cpr::Response r = cpr::Get(cpr::Url{u});
+    	std::cout << r.status_code << std::endl; // 200
+    	json j=json::parse(r.text);
+    	ingredient_=std::make_unique<Ingredient>(j["ingredient_"]);
+    	quantite_=j["quantite"];
+	}
+	friend std::ostream& operator<<(std::ostream& out, const QuantiteIngredient& p) {
+        return out <<"ingredient:"<< *p.ingredient_ << ", quantite:" << p.quantite_;
+        }
+};
 
 int main() {
 
