@@ -119,12 +119,33 @@ class QuantiteIngredient{
     	cpr::Response r = cpr::Get(cpr::Url{u});
     	std::cout << r.status_code << std::endl; // 200
     	json j=json::parse(r.text);
-    	ingredient_=std::make_unique<Ingredient>(j["ingredient_"]);
+    	ingredient_=std::make_unique<Ingredient>(j["ingredient"]);
     	quantite_=j["quantite"];
 	}
 	friend std::ostream& operator<<(std::ostream& out, const QuantiteIngredient& p) {
         return out <<"ingredient:"<< *p.ingredient_ << ", quantite:" << p.quantite_;
         }
+};
+
+class Action{
+	std::unique_ptr<Machine> machine_;
+	std::string commandes_;
+	int duree_;
+	std::unique_ptr<Ingredient> ingredient_;
+	std::optional<std::unique_ptr<Action>> action_;
+	public:
+	Action(int id){
+		std::string u="http://localhost:8000/Action/"+std::to_string(id);
+    	cpr::Response r = cpr::Get(cpr::Url{u});
+    	std::cout << r.status_code << std::endl; // 200
+    	json j=json::parse(r.text);
+    	machine_=std::make_unique<Machine>(j["machine"]);
+    	commandes_=j["commandes"];
+    	ingredient_=std::make_unique<Ingredient>(j["ingredient"]);
+    	if(j["action"])
+    	action_=std::make_unique<Action>(j["action"]);
+	}
+
 };
 
 int main() {
