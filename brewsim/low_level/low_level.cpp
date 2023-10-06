@@ -2,8 +2,16 @@
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
 
+
 using namespace std;
 using namespace nlohmann::json_abi_v3_11_2;
+
+
+/*class Ingredient(models.Model){
+    string nom_;
+};*/
+
+
 
 class Departement {
 
@@ -14,26 +22,32 @@ class Departement {
         numero_=num;
         prixM2_=prix;
     }
-    void affichage(){
-    cout<<"Departement numéro:"<<numero_<<", prix au m2:"<<prixM2_<<endl;
+    Departement(json j){
+        numero_=j["numero"];
+        prixM2_=j["prixM2"];
+    }
+    Departement(int id){
+      string u="http://localhost:8000/departement/"+to_string(id);
+      cpr::Response r = cpr::Get(cpr::Url{u});
+      std::cout << r.status_code << std::endl; // 200
+      json j=json::parse(r.text);
+      numero_=j["numero"];
+      prixM2_=j["prixM2"];
     }
 
-
+    //surcharge d'opérateur <<
+    friend std::ostream& operator<<(std::ostream& out, const Departement& p) {
+        return out <<"Déparetement numéro:"<< p.numero_ << ", prix au m2:" << p.prixM2_;
+        }
 };
 
 
 int main() {
 
-    cpr::Response r = cpr::Get(cpr::Url{"http://localhost:8000/departement/1"});
+    int i=1;
+    Departement dep=(i);
+    cout<<dep<<endl;
 
-
-    std::cout << r.status_code << std::endl; // 200
-    std::cout << r.text << std::endl;
-
-    json j=json::parse(r.text);
-    cout<<j<<endl;
-    cout<<j["numero"]<<endl;
-    cout<<j["prixM2"]<<endl;
 
     return 0;
 }
