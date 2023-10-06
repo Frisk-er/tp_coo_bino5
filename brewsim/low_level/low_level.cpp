@@ -3,6 +3,7 @@
 #include <nlohmann/json.hpp>
 
 using namespace std;
+using namespace nlohmann::json_abi_v3_11_2;
 
 class Departement {
 
@@ -22,8 +23,17 @@ class Departement {
 
 
 int main() {
-    Departement dep(31,2000);
-    dep.affichage();
+
+    cpr::Response r = cpr::Get(cpr::Url{"http://localhost:8000/departement/1"});
+
+
+    std::cout << r.status_code << std::endl; // 200
+    std::cout << r.text << std::endl;
+
+    json j=json::parse(r.text);
+    cout<<j<<endl;
+    cout<<j["numero"]<<endl;
+    cout<<j["prixM2"]<<endl;
 
     return 0;
 }
