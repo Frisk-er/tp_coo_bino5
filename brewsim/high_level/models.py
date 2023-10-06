@@ -22,7 +22,7 @@ class Departement(models.Model):
         return f"{self.numero}"
 
     def json(self):
-        return {"numero": self.numero, "prix_m2": self.prixM2}
+        return {"numero": self.numero, "prixM2": self.prixM2}
 
 
 class Prix(models.Model):
