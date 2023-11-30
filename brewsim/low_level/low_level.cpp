@@ -145,8 +145,34 @@ class Action{
     	if(j["action"])
     	action_=std::make_unique<Action>(j["action"]);
 	}
+	friend std::ostream& operator<<(std::ostream& out, const Action& p) {
+        return out <<"Action commandes:"<< p.commandes_ << ", machine:" << *p.machine_<<", duree_:"<<p.duree_<<"ingredient:"<< *p.ingredient_;
+        }
+	
 
 };
+
+
+class Recette{
+	std::string nom_;
+	std::unique_ptr<Action> action_;
+	public:
+	Recette(int id){
+		std::string u="http://localhost:8000/Action/"+std::to_string(id);
+    	cpr::Response r = cpr::Get(cpr::Url{u});
+    	std::cout << r.status_code << std::endl; // 200
+    	json j=json::parse(r.text);
+    	nom_=j["nom"];
+    	action_=std::make_unique<Action>(j["action"]);
+	}
+	friend std::ostream& operator<<(std::ostream& out, const Recette& p) {
+        return out <<"nom:"<< p.nom_ << ", action:" << *p.action_;
+        }
+
+
+};
+
+
 
 int main() {
 
