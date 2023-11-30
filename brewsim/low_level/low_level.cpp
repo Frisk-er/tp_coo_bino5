@@ -11,12 +11,12 @@ using json = nlohmann::json;
 class Ingredient{
     std::string nom_;
     public:
-    Ingredient(std::string nom){
-    	nom_=nom;
-    }
-    Ingredient(json j){
-    	nom_=j["nom"];
-    }
+    //Ingredient(std::string nom){
+    //	nom_=nom;
+    //}
+    //Ingredient(json j){
+    //	nom_=j["nom"];
+    //}
     Ingredient(int id){
     	std::string u="http://localhost:8000/Ingredient/"+std::to_string(id);
     	cpr::Response r = cpr::Get(cpr::Url{u});
@@ -37,14 +37,14 @@ class Departement {
     int numero_;
     int prixM2_;
     public:
-    Departement( int num, float prix ){
+    /*Departement( int num, float prix ){
         numero_=num;
         prixM2_=prix;
     }
     Departement(json j){
         numero_=j["numero"];
         prixM2_=j["prixM2"];
-    }
+    }*/
     Departement(int id){
     	std::string u="http://localhost:8000/departement/"+std::to_string(id);
     	cpr::Response r = cpr::Get(cpr::Url{u});
@@ -141,12 +141,13 @@ class Action{
     	json j=json::parse(r.text);
     	machine_=std::make_unique<Machine>(j["machine"]);
     	commandes_=j["commandes"];
+    	duree_=j["duree"];
     	ingredient_=std::make_unique<Ingredient>(j["ingredient"]);
     	if(j["action"])
     	action_=std::make_unique<Action>(j["action"]);
 	}
 	friend std::ostream& operator<<(std::ostream& out, const Action& p) {
-        return out <<"Action commandes:"<< p.commandes_ << ", machine:" << *p.machine_<<", duree_:"<<p.duree_<<"ingredient:"<< *p.ingredient_;
+        return out <<"commandes:"<< p.commandes_ << ", machine:" << *p.machine_<<", duree_:"<<p.duree_<<"ingredient:"<< *p.ingredient_;
         }
 	
 
@@ -172,13 +173,98 @@ class Recette{
 
 };
 
+class Usine{
+	std::unique_ptr<Departement> departement_;
+	std::string taille_;
+	std::vector<std::unique_ptr<Machine>> machines_;
+	std::vector<std::unique_ptr<Recette>> recettes_;
+	std::vector<std::unique_ptr<QuantiteIngredient>> stocks_;
+	public:
+	Usine(int id){
+	std::string u="http://localhost:8000/Action/"+std::to_string(id);
+    	cpr::Response r = cpr::Get(cpr::Url{u});
+    	std::cout << r.status_code << std::endl; // 200
+    	json j=json::parse(r.text);
+    	departement_=std::make_unique<Departement>(j["departement"]);
+    	taille_=j["taille"];
+    	
+    	machines_= std::vector<std::unique_ptr<Machine>>();
+    	for(const auto &Mach:j["machines"]){
+    	machines_.push_back(std::make_unique<Machine>(Mach));
+    	}
+    	
+		recettes_= std::vector<std::unique_ptr<Recette>>();
+		for(const auto &Rec:j["recettes"]){
+    	recettes_.push_back(std::make_unique<Recette>(Rec));
+    	}
+    	
+		stocks_= std::vector<std::unique_ptr<QuantiteIngredient>>();
+		for(const auto &Sto:j["stocks"]){
+    	stocks_.push_back(std::make_unique<QuantiteIngredient>(Sto));
+    	}
+    	
+	}
+	friend std::ostream& operator<<(std::ostream& out, const Usine& p) {
+		out <<"departement:"<< *p.departement_ << ", taille_:" << p.taille_;
+		
+		for(const auto &Mach:p.machines_){
+    	out<<*Mach;
+    	}
+		
+		for(const auto &Rec:p.recettes_){
+    	out<<*Rec;
+    	}
+    	
+    	for(const auto &Sto:p.stocks_){
+    	out<<*Sto;
+    	}
+		
+		
+        return out;
+        }
+};
+
 
 
 int main() {
 
     int i=1;
+    
+    //Usine usi=(i);
+    //std::cout<<usi<<std::endl;
+    
+    
     Departement dep=(i);
     std::cout<<dep<<std::endl;
+    
+    Ingredient ing1=(1);
+    std::cout<<ing1<<std::endl;
+    
+    Ingredient ing2=(2);
+    std::cout<<ing2<<std::endl;
+    
+    QuantiteIngredient qi1=(1);
+    std::cout<<qi1<<std::endl;
+    
+    QuantiteIngredient qi2=(2);
+    std::cout<<qi2<<std::endl;
+    
+    Prix prix1=(1);
+    std::cout<<prix1<<std::endl;
+    
+    Prix prix2=(2);
+    std::cout<<prix2<<std::endl;
+    
+    
+    Machine mach1=(1);
+    std::cout<<mach1<<std::endl;
+    
+    Machine mach2=(2);
+    std::cout<<mach2<<std::endl;
+    
+    //Usine usi=(i);
+    //std::cout<<usi<<std::endl;
+    
 
 
     return 0;
