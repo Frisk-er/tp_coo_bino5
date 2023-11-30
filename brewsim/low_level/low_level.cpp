@@ -159,7 +159,7 @@ class Recette{
 	std::unique_ptr<Action> action_;
 	public:
 	Recette(int id){
-		std::string u="http://localhost:8000/Action/"+std::to_string(id);
+		std::string u="http://localhost:8000/Recette/"+std::to_string(id);
     	cpr::Response r = cpr::Get(cpr::Url{u});
     	std::cout << r.status_code << std::endl; // 200
     	json j=json::parse(r.text);
@@ -175,29 +175,32 @@ class Recette{
 
 class Usine{
 	std::unique_ptr<Departement> departement_;
-	std::string taille_;
+	int taille_;
 	std::vector<std::unique_ptr<Machine>> machines_;
 	std::vector<std::unique_ptr<Recette>> recettes_;
 	std::vector<std::unique_ptr<QuantiteIngredient>> stocks_;
 	public:
 	Usine(int id){
-	std::string u="http://localhost:8000/Action/"+std::to_string(id);
+	std::string u="http://localhost:8000/Usine/"+std::to_string(id);
     	cpr::Response r = cpr::Get(cpr::Url{u});
+    	std::cout<<"balise -2"<<std::endl;
     	std::cout << r.status_code << std::endl; // 200
     	json j=json::parse(r.text);
+    	std::cout<<"balise -1"<<std::endl;
     	departement_=std::make_unique<Departement>(j["departement"]);
+    	std::cout<<"balise 0"<<std::endl;
     	taille_=j["taille"];
-    	
+    	std::cout<<"balise 1"<<std::endl;
     	machines_= std::vector<std::unique_ptr<Machine>>();
     	for(const auto &Mach:j["machines"]){
     	machines_.push_back(std::make_unique<Machine>(Mach));
     	}
-    	
+    	std::cout<<"balise 2"<<std::endl;
 		recettes_= std::vector<std::unique_ptr<Recette>>();
 		for(const auto &Rec:j["recettes"]){
     	recettes_.push_back(std::make_unique<Recette>(Rec));
     	}
-    	
+    	std::cout<<"balise 3"<<std::endl;
 		stocks_= std::vector<std::unique_ptr<QuantiteIngredient>>();
 		for(const auto &Sto:j["stocks"]){
     	stocks_.push_back(std::make_unique<QuantiteIngredient>(Sto));
@@ -262,8 +265,8 @@ int main() {
     Machine mach2=(2);
     std::cout<<mach2<<std::endl;
     
-    //Usine usi=(i);
-    //std::cout<<usi<<std::endl;
+    Usine usi=(i);
+    std::cout<<usi<<std::endl;
     
 
 
