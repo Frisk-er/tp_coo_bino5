@@ -130,7 +130,9 @@ class Action(models.Model):
         return {
             "machine": self.machine.id,
             "commandes": self.commandes,
-            "action": self.action.id,
+            "duree": self.duree,
+            "ingredient": self.ingredient.id,
+            "action": self.action,
         }
 
     def json_extended(self):
@@ -138,12 +140,16 @@ class Action(models.Model):
             return {
                 "machine": self.machine.json(),
                 "commandes": self.commandes,
+                "duree": self.duree,
+                "ingredient": self.ingredient.id,
                 "action": self.action.json_extended(),
             }
         else:
             return {
                 "machine": self.machine.json(),
                 "commandes": self.commandes,
+                "duree": self.duree,
+                "ingredient": self.ingredient.id,
             }
 
 
