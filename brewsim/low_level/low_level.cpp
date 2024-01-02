@@ -87,7 +87,7 @@ class Prix{
     }
 
     friend std::ostream& operator<<(std::ostream& out, const Prix& p) {
-        return out <<"ingredient:"<< *p.ingredient_ << ", departement:" << *p.departement_<< ", prix:"<<p.prix_;
+        return out << *p.ingredient_ << ",du departement:" << *p.departement_<< ",est au prix:"<<p.prix_;
         }
 };
 
@@ -105,7 +105,7 @@ class Machine{
     	prix_=j["prix"];
 	}
 	friend std::ostream& operator<<(std::ostream& out, const Machine& p) {
-        return out <<"nom:"<< p.nom_ << ", prix:" << p.prix_;
+        return out <<"nom machine:"<< p.nom_ << ", prix:" << p.prix_;
         }
 
 };
@@ -123,7 +123,7 @@ class QuantiteIngredient{
     	quantite_=j["quantite"];
 	}
 	friend std::ostream& operator<<(std::ostream& out, const QuantiteIngredient& p) {
-        return out <<"ingredient:"<< *p.ingredient_ << ", quantite:" << p.quantite_;
+        return out << *p.ingredient_ << ", quantite:" << p.quantite_;
         }
 };
 
@@ -155,7 +155,7 @@ class Action{
 	}
 
 	friend std::ostream& operator<<(std::ostream& out, const Action& p) {
-        return out <<"commandes:"<< p.commandes_ << ", machine:" << *p.machine_<<", duree_:"<<p.duree_<<"ingredient:"<< *p.ingredient_;
+        return out <<"commandes:"<< p.commandes_ << "," << *p.machine_<<", duree_:"<<p.duree_<<",\t"<< *p.ingredient_;
         }
 
 
@@ -175,7 +175,7 @@ class Recette{
     	action_=std::make_unique<Action>(j["action"]);
 	}
 	friend std::ostream& operator<<(std::ostream& out, const Recette& p) {
-        return out <<"nom:"<< p.nom_ << ", action:" << *p.action_;
+        return out <<"nom recette :"<< p.nom_ << ", action(s):" << *p.action_;
         }
 
 
@@ -218,18 +218,18 @@ class Usine{
 	}
 
 	friend std::ostream& operator<<(std::ostream& out, const Usine& p) {
-		out <<"departement:"<< *p.departement_ << ", taille_:" << p.taille_;
-
-	for(const auto &Mach:p.machines_){
-    		out<<*Mach;
+		out <<"Usine du "<< *p.departement_ << ", taille_:" << p.taille_<<"\t";
+        out<<"machine(s):";
+	    for(const auto &Mach:p.machines_){
+    		out<<*Mach<<",";
     	}
-
-	for(const auto &Rec:p.recettes_){
-    		out<<*Rec;
+        out<<"\trecette(s):";
+	    for(const auto &Rec:p.recettes_){
+    		out<<*Rec<<",";
     	}
-
+        out<<"\tstocks:";
     	for(const auto &Sto:p.stocks_){
-    		out<<*Sto;
+    		out<<*Sto<<",";
     	}
         return out;
         }
