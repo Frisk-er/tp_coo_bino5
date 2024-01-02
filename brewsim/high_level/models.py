@@ -127,13 +127,21 @@ class Action(models.Model):
         return self.commandes
 
     def json(self):
-        return {
-            "machine": self.machine.id,
-            "commandes": self.commandes,
-            "duree": self.duree,
-            "ingredient": self.ingredient.id,
-            "action": self.action,
-        }
+        if self.action:
+            return {
+                "machine": self.machine.id,
+                "commandes": self.commandes,
+                "duree": self.duree,
+                "ingredient": self.ingredient.id,
+                "action": self.action,
+            }
+        else:
+            return {
+                "machine": self.machine.id,
+                "commandes": self.commandes,
+                "duree": self.duree,
+                "ingredient": self.ingredient.id,
+            }
 
     def json_extended(self):
         if self.action:
