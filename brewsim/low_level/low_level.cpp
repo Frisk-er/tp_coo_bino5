@@ -139,13 +139,21 @@ class Action{
     	cpr::Response r = cpr::Get(cpr::Url{u});
     	std::cout << r.status_code << std::endl; // 200
     	json j=json::parse(r.text);
+    	std::cout<<"action1"<<std::endl;
     	machine_=std::make_unique<Machine>(j["machine"]);
+    	std::cout<<"action2"<<std::endl;
     	commandes_=j["commandes"];
+    	std::cout<<"action2.1"<<std::endl;
     	duree_=j["duree"];
+    	std::cout<<"action3"<<std::endl;
     	ingredient_=std::make_unique<Ingredient>(j["ingredient"]);
-    	if(j["action"])
+    	std::cout<<"action4"<<std::endl;
+    	if(j.contains("action") )
     	action_=std::make_unique<Action>(j["action"]);
+
+	std::cout<<"action5"<<std::endl;
 	}
+
 	friend std::ostream& operator<<(std::ostream& out, const Action& p) {
         return out <<"commandes:"<< p.commandes_ << ", machine:" << *p.machine_<<", duree_:"<<p.duree_<<"ingredient:"<< *p.ingredient_;
         }
@@ -194,36 +202,35 @@ class Usine{
     	std::cout<<"balise 4"<<std::endl;
     	machines_= std::vector<std::unique_ptr<Machine>>();
     	for(const auto &Mach:j["machines"]){
-    	machines_.push_back(std::make_unique<Machine>(Mach));
+    		machines_.push_back(std::make_unique<Machine>(Mach));
     	}
     	std::cout<<"balise 5"<<std::endl;
-		recettes_= std::vector<std::unique_ptr<Recette>>();
-		for(const auto &Rec:j["recettes"]){
-    	recettes_.push_back(std::make_unique<Recette>(Rec));
+	recettes_= std::vector<std::unique_ptr<Recette>>();
+	for(const auto &Rec:j["recettes"]){
+    		recettes_.push_back(std::make_unique<Recette>(Rec));
     	}
     	std::cout<<"balise 6"<<std::endl;
-		stocks_= std::vector<std::unique_ptr<QuantiteIngredient>>();
-		for(const auto &Sto:j["stocks"]){
-    	stocks_.push_back(std::make_unique<QuantiteIngredient>(Sto));
+	stocks_= std::vector<std::unique_ptr<QuantiteIngredient>>();
+	for(const auto &Sto:j["stocks"]){
+    		stocks_.push_back(std::make_unique<QuantiteIngredient>(Sto));
     	}
-
+	std::cout<<"balise 7"<<std::endl;
 	}
+
 	friend std::ostream& operator<<(std::ostream& out, const Usine& p) {
 		out <<"departement:"<< *p.departement_ << ", taille_:" << p.taille_;
 
-		for(const auto &Mach:p.machines_){
-    	out<<*Mach;
+	for(const auto &Mach:p.machines_){
+    		out<<*Mach;
     	}
 
-		for(const auto &Rec:p.recettes_){
-    	out<<*Rec;
+	for(const auto &Rec:p.recettes_){
+    		out<<*Rec;
     	}
 
     	for(const auto &Sto:p.stocks_){
-    	out<<*Sto;
+    		out<<*Sto;
     	}
-
-
         return out;
         }
 };
@@ -234,8 +241,8 @@ int main() {
 
     int i=1;
 
-    //Usine usi=(i);
-    //std::cout<<usi<<std::endl;
+    Usine usi=(i);
+    std::cout<<usi<<std::endl;
 
 
     Departement dep=(i);
@@ -260,14 +267,29 @@ int main() {
     std::cout<<prix2<<std::endl;
 
 
+
     Machine mach1=(1);
     std::cout<<mach1<<std::endl;
 
     Machine mach2=(2);
     std::cout<<mach2<<std::endl;
 
-    Usine usi=(i);
+    std::cout<<"main1"<<std::endl;
+
+    Action act1=(1);
+    std::cout<<act1<<std::endl;
+
+    std::cout<<"main2"<<std::endl;
+
+    Recette rec1=(1);
+    std::cout<<rec1<<std::endl;
+
+    std::cout<<"main3"<<std::endl;
+
+    Usine usibis=(i);
     std::cout<<usi<<std::endl;
+
+    std::cout<<"main_fin"<<std::endl;
 
 
 
